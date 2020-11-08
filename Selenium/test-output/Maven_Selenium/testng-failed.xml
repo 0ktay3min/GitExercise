@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [Maven_Selenium]">
+  <test name="Maven_Selenium_Test(failed)">
+    <classes>
+      <class name="Testing.Scenario">
+        <methods>
+          <include name="Logout"/>
+          <include name="Login"/>
+          <include name="openApp"/>
+        </methods>
+      </class> <!-- Testing.Scenario -->
+    </classes>
+  </test> <!-- Maven_Selenium_Test(failed) -->
+</suite> <!-- Failed suite [Maven_Selenium] -->

@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Maven_Selenium">
+	<test name="Maven_Selenium_Test">
+		<classes>
+			<class name="Testing.Scenario"></class>
+		</classes>
+	</test>
+</suite>

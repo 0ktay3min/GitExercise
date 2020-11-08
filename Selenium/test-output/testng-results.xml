@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="3" passed="3">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Maven_Selenium" duration-ms="91878" started-at="2018-09-13T09:07:55Z" finished-at="2018-09-13T09:09:27Z">
+    <groups>
+    </groups>
+    <test name="Maven_Selenium_Test" duration-ms="91878" started-at="2018-09-13T09:07:55Z" finished-at="2018-09-13T09:09:27Z">
+      <class name="Testing.Scenario">
+        <test-method status="PASS" signature="openApp()[pri:0, instance:Testing.Scenario@c038203]" name="openApp" duration-ms="9346" started-at="2018-09-13T14:37:55Z" finished-at="2018-09-13T14:38:04Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- openApp -->
+        <test-method status="PASS" signature="Login()[pri:0, instance:Testing.Scenario@c038203]" name="Login" duration-ms="75679" started-at="2018-09-13T14:38:04Z" depends-on-methods="Testing.Scenario.openApp" finished-at="2018-09-13T14:39:20Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- Login -->
+        <test-method status="PASS" signature="Logout()[pri:0, instance:Testing.Scenario@c038203]" name="Logout" duration-ms="6776" started-at="2018-09-13T14:39:20Z" depends-on-methods="Testing.Scenario.Login" finished-at="2018-09-13T14:39:27Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- Logout -->
+      </class> <!-- Testing.Scenario -->
+    </test> <!-- Maven_Selenium_Test -->
+  </suite> <!-- Maven_Selenium -->
+</testng-results>
