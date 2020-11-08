@@ -1,0 +1,463 @@
+Project Notes:
+
+Maven is a project build tool(build management tool)
+
+What are some other build management tools?
+Gradle, Ant.
+
+Centralized management, you dont IDE to run your test cases.
+
+maven clean --->  deletes target folder, and also deletes duplicate dependencies
+maven  test
+maven clean verify ---> created report(html)
+
+maven-cucumber-reporting requires/creates report using json file in your runner class.
+
+With Cucumber report plugin we can have Cucumber reports(json file in bdd runner)
+
+Deployment: is the process of delivering new version  of software to the application server.
+
+Aplication server: Apache Tomcat, Jetty(Jenkins is using jetty), Jboss..
+
+Release: is the process of delivering new version of software to the end user/client.(Live)
+
+Release day: We test manually all functions and run regression suite.(previous night we run regression)
+
+If you find a bug, PO decides to move forward and keep that bug in live/production.
+If it is a critical one, then they will not release.
+Blocker---> Release 
+
+I am following one sprint after:
+
+Current sprint: 
+Manual tester are working on new features.
+Automation Testers are working on previous sprint.
+
+Automation scripts for regression suite, 6 sprints is done, then you are valuable at this point. 
+
+UI -->2 WEEKS
+API --> 1 WEEK
+BACK ENDS-->2 WEEKS
+
+INTEGRATIONS
+
+USER ACCEPTANCE 
+
+DEPLOY AND RELEASE.
+
+Most likely I do help with manual after finishing my automation scripts for regression suite of previos sprint. Then I help manual testers.
+%60 , %70 percent automation and %30 manual.
+
+PO rely on manual testing rather than automation especially on release day. There are many tests fail in regression suite.
+
+As automation tester I write test for new functionality and I maintain my framework.
+
+What is cucumber flow of execution?
+
+Hook class(@Before-Also you should not extend hooks)--->FeatureFile(Background)---->Scenario---->HookClass(@After)
+
+@Before You can multiple of it.
+Background: Precondition for every test scenario in a feature file(Smoke Test)
+Background is used in Smoketest for sure!!!
+Hook class is optional, as well as background.
+
+Headless is faster but has a problem with uploading. You can take screenshots and everything else.
+
+
+
+Source Code ---> Testing UI/API/BackEnd ----> Deploy(Aplication Server) ---> Release
+
+
+What are we testing with Selenium?
+
+Web applications, and they run on browsers.
+
+How web application works?
+
+Code-->Compile-->Test-->Deploy(jar war files to application server--> run it on the application server.
+
+
+Cucumber is a tool to apply BDD.
+
+Every story has an acceptance criteria, entire team participate Sprint Planning(First monday of sprint, from 10 am - 12 30 pm). 
+Entire team look to the same requirement, so that we don't have much conflict in understanding.(pharmaticul, bank domain(business))
+
+-What do you like you about cucumber(bdd) and agile?
+
+I can not believe how much more requirements we are handling with agile, and with the help of bdd we are very confident about business 
+requirements.
+PO brings business requirements --> these requirements written into user stories with acceptance criteria(set of predefined requirements
+that must be met for current user story) -->BA writes it. PO explains the feature team has to develop and (how this feature should work).
+
+
+Story grooming:
+
+Daily Scrum meetings(daily standups): 9: 15 (15 minutes)
+
+-Daily stand up meeting is technical review of previous day and current business day.
+Whatever task assigned to you, I am working on LMS , Create Client functionality > Finished Testing Two Features --> Started writing 
+cucumber features.
+
+1- Have a feature file( scenario outline)
+2- Manual Test Case
+3- Flow of application: 
+4- Features that you are currently testing: 
+
+
+
+Sprint Review (Last Friday of Sprint ( 10-12:00 pm, and we have also Retrospective Meeting)
+
+
+PO is joins and give details about what has been done.
+Sprint review is the business review of sprint.
+QA lead will share automation and manual test coverage. They share their testing coverage with client, 
+they fill out Test Coverage Form(Regression suite coverage, Manual Test Coverage for the current sprint) and sent it to management.
+
+Based on user story-->we create feature files > step definitions
+
+I am using Cucmber to implement BDD into our framework:
+
+-Cucumber allows us write test scenarious from end-user perspective
+-In agile, we have limited time boxed sprint(2 weeks), with help of cucumber we can move forward faster and safer(by means of 
+miscommunication)
+-Cucumber makes test scenarios more undestandble to non-technical people
+-Gherkin language ( this is not a programming language-->gherkin is a collections of keywords(given, when, then)
+
+Agile:I can not belive how many feature we are delivering and cofartable about all steps.
+
+What is the difference between data table and examples table?
+What is the difference between scenario and scenario outline?
+Feature File side!!!
+
+(Data Table:Sceanrio)
+Scenario:
+
+When user log in with below credentials
+
+|email|pssword|
+//Data table is used to exapnd one specific test step
+
+-----
+(Examples Table)-Sceanrio Outline
+
+Scenario Outline:
+Given
+When
+Then
+
+Examples:
+
+|username|password|email|
+
+//Examples or Scenario Outline is used to provide test data to whole scenario.
+
+You can have multiple of those.
+Scenario Outlines does same thins as dataprovider in TestNG.
+
+So if we have excel as test data why do we need examples?
+
+We have state wide users/clients. all have different credentials? Zip code makes a different.
+
+When we need to VALIDATE a data (bigger) we use excel, in our project, database admins downaloads test data for us and we use it as 
+excel in our framework. We did not get really happy about it, not all testers comfortable with sql. In my previos one i sed it, so I am comfartable.
+
+VALIDATE: User information?
+
+AMEX Credit Card: We were accepting amex and we started to accept it.
+
+There is a change happened in database. +18 to register for class, you need to have highschool degree
+You need to be citizen or greencard holder to be eligable.
+
+Our product owner wants some of this data be visible to everybody so that they can see.
+
+Did you create test data? 
+
+QA Manager is taking care of it.
+
+
+ 
+ 
+Retrospective Meeting:( We get lunch catering and have retrospective)
+(Never be negative, always share how to solve or how you will improve)
+
+Likes & Unlikes of previous sprint:
+
+What would we do to deliver better?
+What something that you want to change in previos sprint?
+
+Our qa environment was not ready?
+
+Island --> If you go to island tell us something you will bring from this sprint.
+
+Every solution can be written to JIRA Confluence tool, evernote...
+
+What did you add to your knowledgebase?
+You can give difficult time woth java file exmaples?
+
+How do you add value to your team, framework, testing environments?
+
+Slack reports in Jenkins, we were not getting cucumber reports to slack, and smoke regression notification, I introducced to team.
+
+
+--------------------
+Recruiters( Between Client and You )
+
+Cognizant - 250k - alot of accounts
+Accenture
+Infosys - 150k
+Tata(TCS)
+
+Judge 
+Forte 
+Global Logic
+
+W2- FULL TIME --> Taxes are taken from your paycheck --> Insurance
+1099 - FULL TIME --> Taxes and everything will come out from your end year tax (Same as working for UBER) No benefits
+
+W2 6 MONHTS, 1 Year contract --> $50 $60 per hour 
+1099 1 year contract ---> $55
+
+Direct Hire: You are hired by company, no recruiters in between, $85k-$90k 
+Contract to hire: 6 month, they will hire you at the end depending on your performance.
+
+$30 not say that, they will offer you $23. Deal, car dealer so do you best!
+$45 -$55 
+$50 -$55
+
+What is budget for this? 
+
+How much average you are paying somebody with my skills?
+Project is important to me, and also technology that I will be working. I would love to move forward and I am interested getting more 
+information about this position.
+This sounds great....
+
+
+
+
+
+
+Bench = 6 months--->1,2,3 months you stay home and they still pay you
+
+
+Contractors and also vendors. They are not just recruiting but they do project themselves. 
+(Cognizant team) QA Lead --> Gives test coverage report to client( bank-qa manager, it manager--> cognizantreports@bank.com)
+
+Recruiters, interested make sure as for job requirements in written form.
+You ask recruiter, have placed somebody before? If he says yes, then is it ok to share some feedback and tips?
+
+----------------------
+
+Tell me about Project: 
+
+Bonsai: 
+
+Online accounting, finance application with various features like Account Information, Transactions,
+Contracts, Payment & Transfers, Proposals, Invoices and Expenses modules. 
+
+Avalon:
+Online Learning Management Systems, administration, documentation, tracking, reporting, and delivery of e-learning  courses.
+
+BONSAI: Online accounting & finance side application with varios features like Account Information, Transactions, Contracts
+
+In application we have multifield features such as Proposal, Contract, Expense, Invoice and Task.
+
+My responsibilty is to test manually and write automation scripts for new features, and maintain framework.
+
+Flow of Application:
+
+1-Create Client
+2-Adding proposal and Payment Options
+3-Sending Contract
+4-Send Invoice 
+
+UI Side:
+
+Creating Client
+Validating confirmation pages and data 
+Creating Proposal
+Creating Invoice 
+
+Flow of cucumber application?
+
+USER STORY --> CUCUMBER SCENARIO -- > WRITE AUTOMATION CODE 
+
+
+How do you do code review?
+
+Team members getting together (online webonar tool) and developer presents the code, when everybody approves they push code to git, so that anyone can pull.
+
+---------------------
+
+Framework Flow:
+
+PO brings business requirement, BA writes it to jira.
+
+1-For each user story I write a feature file
+2-Then we write Java code for scenario steps.
+
+Previous sprint is manually tested, and then I write automation code/scripts for upcoming regression.
+Minor Regression: We have at the end of every sprint.
+
+I am using POM(page factory/selenium) and Singleton framework design patterns:
+
+pages (page factory/action to be taken)
+runners (@runwith, @cucumberoptions))
+stepdefinitions
+utilities(functions) driver, browserutilities(functions), configuration reader, excel reader..)
+
+test data:
+feature
+excel
+properties
+
+In current sprint, I am creating page factory.
+
+
+For the naming convention, we follow google naming conventions, HelloBonsaiUsersSignUp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------
+
+Window Handles : 
+
+Each time WebDriver object is initiated , a unique alphanumeric number is assigned to each window is opened.
+We need to switch the window.
+
+driver.getWindowHanle() ----> Current window handle 
+
+driver.getWindowHandles()-----> Gets all open windows
+
+
+Set<String> winHandles = driver.getWindowHandles(); 
+
+-Contain duplicate elements.
+
+
+-----------------------------
+Test Reporting:
+Q:What king of reporting you have used?
+A: TestNG - Extend Reports
+
+CUCUMBER PROJECT --> They were using Cucumber reports throu Jenkins. I actually offered to use Extend reports
+which has report, log functionality. Cucumber reports do not provide LOGs. So they were looking for an alternative solution.
+When I suggested my manager and team try
+
+Q: Why do we need reporting?
+A: for feedback
+
+Test report is a communication between testing team and client (PO, StekeHolder) 
+Evaluate current status or quality of product. Application is stable, we should release it to customer.
+
+Details
+Clear
+Standard
+Specific
+
+Correct Report: 
+
+Project Name: 
+Test Cycle (Type) -> Functional, Regression, Integrations
+Tested functions (Test Cases executed, Test cases failed, Test Cases passed) 
+Defect (Defect Priority, Status, Description)---- Defect Life Cycle.
+
+
+Functional (Regression)
+Pass= 200
+Fail= 15
+Not Executed =10
+
+--------------------------------------------
+LOG:
+1- System Logs --> Windows related, Linux Servers ---- Linux Related problems 
+Our Linux System Admin, takes care of the LOGs, if there is anything to be fixed, Linux Admin open tickets on Jira.
+
+2- Test LOGs
+-LOG4G or Extend Logger => Recorded events by Operating System for test execution, consists information related to test run or test cases.
+Rather then System.out.println, all test events we use logger to save logs for each test cases. 
+
+Q: Why are you using LOGs. 
+A: I want to have it for what I have tested for last 3 days. 
+
+Conditional Statement: 
+if(scenario.isPassed) {
+log.status ("Test Passed") 
+}else {
+log.status("Test Failed")
+}
+ 
+SMOKE --> In the beginning of project, we see frequent how stable is out application 
+
+Sample LOG: 
+isDisplayed
+
+if loingpage.isDisplayed() {
+log status ("Login page is displayed")
+login button --("login button" Available)
+}
+
+log.OSNAME
+log.
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

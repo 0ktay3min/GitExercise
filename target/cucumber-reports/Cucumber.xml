@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testsuite errors="0" failures="1" name="io.cucumber.core.plugin.JUnitFormatter" skipped="0" tests="1" time="9.183">
+<testcase classname="Bonsai Utils Project" name="Bonsai Utils" time="8.51">
+<failure message="" type="java.lang.NullPointerException"><![CDATA[Given User launches chrome browser..........................................undefined
+When User opens Bonsai URL..................................................undefined
+And User enters valid login credentials.....................................undefined
+And User should see Bonsai Dashboard........................................undefined
+When User clicks Projects tab...............................................undefined
+When User clicks NEW Project tab............................................undefined
+And User enters new project information and clicks Create Project...........undefined
+And User should see newly added Project on the Project List.................undefined
+Then User will close browser................................................undefined
+
+StackTrace:
+java.lang.NullPointerException
+	at com.bonsaiui.utilities.BonsaiUtils.endExtentReport(BonsaiUtils.java:95)
+	at com.bonsaiui.stepdefinitions.HelloBonsaiHookClass.setupBonsaiAppication(HelloBonsaiHookClass.java:26)
+]]></failure>
+</testcase>
+</testsuite>

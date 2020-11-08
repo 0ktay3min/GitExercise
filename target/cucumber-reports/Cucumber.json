@@ -1,0 +1,161 @@
+[
+  {
+    "line": 2,
+    "elements": [
+      {
+        "start_timestamp": "2020-05-01T19:13:26.309Z",
+        "before": [
+          {
+            "result": {
+              "error_message": "java.lang.NullPointerException\r\n\tat com.bonsaiui.utilities.BonsaiUtils.endExtentReport(BonsaiUtils.java:95)\r\n\tat com.bonsaiui.stepdefinitions.HelloBonsaiHookClass.setupBonsaiAppication(HelloBonsaiHookClass.java:26)\r\n",
+              "duration": 6309000000,
+              "status": "failed"
+            },
+            "match": {
+              "location": "com.bonsaiui.stepdefinitions.HelloBonsaiHookClass.setupBonsaiAppication()"
+            }
+          }
+        ],
+        "line": 4,
+        "name": "Bonsai Utils",
+        "description": "",
+        "id": "bonsai-utils-project;bonsai-utils",
+        "after": [
+          {
+            "result": {
+              "error_message": "java.lang.NullPointerException\r\n\tat com.bonsaiui.utilities.BonsaiUtils.endExtentReport(BonsaiUtils.java:95)\r\n\tat com.bonsaiui.stepdefinitions.HelloBonsaiHookClass.tearDownBonsaiApplication(HelloBonsaiHookClass.java:35)\r\n",
+              "duration": 2127000000,
+              "status": "failed"
+            },
+            "match": {
+              "location": "com.bonsaiui.stepdefinitions.HelloBonsaiHookClass.tearDownBonsaiApplication(io.cucumber.java.Scenario)"
+            }
+          }
+        ],
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "line": 5,
+            "name": "User launches chrome browser",
+            "match": {},
+            "keyword": "Given "
+          },
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "line": 6,
+            "name": "User opens Bonsai URL",
+            "match": {},
+            "keyword": "When "
+          },
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "line": 7,
+            "name": "User enters valid login credentials",
+            "match": {},
+            "keyword": "And "
+          },
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "line": 8,
+            "name": "User should see Bonsai Dashboard",
+            "match": {},
+            "keyword": "And "
+          },
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "line": 9,
+            "name": "User clicks Projects tab",
+            "match": {},
+            "keyword": "When "
+          },
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "line": 10,
+            "name": "User clicks NEW Project tab",
+            "match": {},
+            "keyword": "When "
+          },
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "line": 11,
+            "name": "User enters new project information and clicks Create Project",
+            "match": {},
+            "rows": [
+              {
+                "cells": [
+                  "Client Name",
+                  "Client Email",
+                  "Project Name",
+                  "Hourly Rate"
+                ]
+              },
+              {
+                "cells": [
+                  "Apple INC",
+                  "4sjobs@apple.com",
+                  "MAC OSX",
+                  "150"
+                ]
+              }
+            ],
+            "keyword": "And "
+          },
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "line": 14,
+            "name": "User should see newly added Project on the Project List",
+            "match": {},
+            "keyword": "And "
+          },
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "line": 15,
+            "name": "User will close browser",
+            "match": {},
+            "keyword": "Then "
+          }
+        ],
+        "tags": [
+          {
+            "name": "@wip1"
+          }
+        ]
+      }
+    ],
+    "name": "Bonsai Utils Project",
+    "description": "",
+    "id": "bonsai-utils-project",
+    "keyword": "Feature",
+    "uri": "file:src/test/resources/Features/bonsaiutils.feature",
+    "tags": [
+      {
+        "name": "@wip1",
+        "type": "Tag",
+        "location": {
+          "line": 1,
+          "column": 1
+        }
+      }
+    ]
+  }
+]
