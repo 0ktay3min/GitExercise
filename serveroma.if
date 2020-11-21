@@ -1,0 +1,484 @@
+'------------------------ ALIASOMA FROM JOBSETUP ---------------------
+' #ALIASOMA translated in IF instruction 
+'---------------------------------------------------------------------
+
+if BEVP = 0 or BEVP = 10 then _CKBEV=1 end if   'For Manual or Free Float bevel enable BreakBevel
+
+if BEVP = 3 then BEVP=1, _AUTOBFR=0 end if      'Convert Frame Base Bevel position into Follow front with Bevel priority FRAME BASE (possible _AUTOBFR=2 x SMART)
+
+if BEVP=0 or BEVP=10 then BEVP=7 end if  'Convert Bevel position Manual or Free Float in Automatic
+
+if POLISH = 2 then POLISH = 1 'POLISH: 2, 3 (+128) = 1 (+128)
+   elseif POLISH =3   then POLISH=1
+   elseif POLISH =130 then POLISH=129
+   elseif POLISH =131 then POLISH=129
+end if
+
+'#ALIASOMA AR=_LCOAT S- 0=0 1=2
+if AR=0 then
+   _LCOAT=0
+elseif AR=1 then
+   _LCOAT=2
+end if 
+
+'---------------------------------------------------------------------
+define #TBA.1 = 1 ' Mettere a 1 per TBA
+'-----------------------------------------------------------------------
+'----------------------------- ALIASOMA STANDARD -----------------------
+'*>
+'BEVP=0 : Manual
+
+'BEVP=10 : Free Float
+
+'POLISH: 201 solo pasta 1, 202 solo pasta 2
+
+'POLISH: 2, 3 (+128) = 1 (+128)
+
+' BEVP=3 : Follow front with Bevel priority FRAME BASE (possible 3=2 x SMART)
+
+' BTILT = VANGLE
+
+' HICRV = _ETYP2
+
+'FTYP to smart options
+if FTYP=2 and _AUTOBFR=2 then _FSTRESS=1, _MAXDFF=4 end if
+if not (FTYP=2) and _AUTOBFR=2 then _FSTRESS=2, _MAXDFF=4 end if
+
+'*<
+'-----------------------------------------------------------------------
+'----------------------------- ALIASOMA TBA ----------------------------
+'---------------------------------------------------------------------
+'*>
+if #TBA.1 = 1 then
+
+   define #INDIRECT.1 = 0
+   if #INDIRECT.1 = 1 then
+' cancel eventual info about direct centering
+      if (FCOCIN=*) then FCOCIN=? end if
+      if (FCOCUP=*) then FCOCUP=? end if
+      if (FCSGIN=*) then FCSGIN=? end if
+      if (FCSGUP=*) then FCSGUP=? end if
+   else
+' Ignore eventual info about indirect centering
+      if (IPD=*) then IPD=? end if
+      if (OCHT=*) then OCHT=? end if
+      if (SEGHT=*) then SEGHT=? end if
+      if (MPD=*) then MPD=? end if
+      if (NPD=*) then NPD=? end if
+
+' In case the customer uses the FBxxxx fields instead of FCxxxx
+'     if (FBOCIN=*) and not (FBOCIN="?") and (not (FCOCIN=*) or (FCOCIN="?")) then FCOCIN=FBOCIN end if
+'     if (FBOCUP=*) and not (FBOCUP="?") and (not (FCOCUP=*) or (FCOCUP="?")) then FCOCUP=FBOCUP end if
+'     if (FBSGIN=*) and not (FBSGIN="?") and (not (FCSGIN=*) or (FCSGIN="?")) then FCSGIN=FBSGIN end if
+'     if (FBSGUP=*) and not (FBSGUP="?") and (not (FCSGUP=*) or (FCSGUP="?")) then FCSGUP=FBSGUP end if
+
+' decentering data FCOC
+      if not (FCOCIN=*) then FCOCIN=? end if
+      if not (FCOCUP=*) then FCOCUP=? end if
+' available to invert sign of fcoc (if needed)
+'     if (FCOCIN=*) then FCOCIN=-1*FCOCIN end if
+'     if (FCOCUP=*) then FCOCUP=-1*FCOCUP end if
+   end if
+
+'--------------------------
+' received a valid Lens Data
+   if not (FRNT=*) or not (FRNT>0) then _LDFRNT=? else _LDFRNT=FRNT end if
+   if not (LIND=*) or not (LIND>0) then LIND=? end if
+   if not (CTHICK=*) or not (CTHICK>0) then CTHICK=? end if
+   if (TINT=*) then TINT=? end if
+
+'If the old LTYP is received from server we convert it in the new LTYPE
+   if (LTYP beginswith "SV") and not (LTYP endswith "FF") and (not (LTYPE=*) or (LTYPE="?")) and (not (_COMMLOGO=*) or (_COMMLOGO=0) or (_COMMLOGO="?")) and not (HASENG=1) then LTYPE="SV", LNAM=? end if
+   if (LTYP beginswith "SV") and (_COMMLOGO=1) then LTYPE="SV" end if
+   if (LTYP beginswith "SV") and ((LTYP endswith "FF") or (HASENG=1)) and (not (LTYPE=*) or (LTYPE="?")) then LTYPE="PR", _SVFF=1 end if
+
+   if (LTYP beginswith "PR") and (not (LTYPE=*) or (LTYPE="?")) then LTYP="PR",LTYPE="PR" end if
+   if (LTYP contains "BI") and (LTYP contains "FT") and (not (LTYPE=*) or (LTYPE="?")) then LTYPE="BI FT" end if
+   if (LTYP contains "BI") and (LTYP contains "CT") and (not (LTYPE=*) or (LTYPE="?")) then LTYPE="BI CT" end if
+   if (LTYP contains "BI") and (LTYP contains "RD") and (not (LTYPE=*) or (LTYPE="?")) then LTYPE="BI RD" end if
+   if (LTYP contains "TR") and (LTYP contains "FT") and (not (LTYPE=*) or (LTYPE="?")) then LTYPE="TR FT" end if
+   if (LTYP contains "TR") and (LTYP contains "CT") and (not (LTYPE=*) or (LTYPE="?")) then LTYPE="TR CT" end if
+   if (LTYP contains "TR") and (LTYP contains "RD") and (not (LTYPE=*) or (LTYPE="?")) then LTYPE="TR RD" end if
+'temporarly Trifocal managed like Bifocal
+'  if (LTYP contains "TR") and (LTYP contains "FT") and (not (LTYPE=*) or (LTYPE="?")) then LTYPE="BI FT", _TR=1 end if
+'  if (LTYP contains "TR") and (LTYP contains "CT") and (not (LTYPE=*) or (LTYPE="?")) then LTYPE="BI CT", _TR=1 end if
+'  if (LTYP contains "TR") and (LTYP contains "RD") and (not (LTYPE=*) or (LTYPE="?")) then LTYPE="BI RD", _TR=1 end if
+
+   if (LTYPE beginswith "TR") then _TR=1 else _TR=0 end if
+
+'  if (LTYPE beginswith "TR") and (LTYPE contains "FT") then LTYPE="BI FT", _TR=1 end if
+'  if (LTYPE beginswith "TR") and (LTYPE contains "CT") then LTYPE="BI CT", _TR=1 end if
+'  if (LTYPE beginswith "TR") and (LTYPE contains "RD") then LTYPE="BI RD", _TR=1 end if
+
+   if (LTYPE beginswith "NV") then LTYPE="PR", _NV=1 else _NV=0 end if
+' in case of NV is not received and it has to be used the LNAM
+'  if LTYPE="PR" and (LNAM="OFFICE 100" or LNAM="OFFICE 200") then _NV=1 else _NV=0 end if
+
+' for the OFFICE lenses, the NR power has to be checked instead of DR, but oftes, the power is not sent in the LDNRxx and
+' it has to be found into other fields
+
+'  if _NV=1 and SPH=* then LDNRSPH=SPH else LDNRSPH=? end if
+'  if _NV=1 and CYL=* then LDNRCYL=CYL else LDNRCYL=? end if
+'  if _NV=1 and AX=* then LDNRAX=AX else LDNRAX=? end if
+
+'!!!starting from here Only LTYPE is valid!!!
+
+'Force PR if SV FF
+   if (LTYPE beginswith "SV") and ((LTYPE contains "FF") or (HASENG=1)) and (LNAM=*) then LTYPE="PR", _SVFF=1 end if
+
+'can be used to get front base from front radius
+'  if (_FRNT>0) then _LDFRNT=((LIND-1)*1000)/_FRNT end if
+
+'''Possibily Calculate ERSG from FCSG-FCOC (PR not FF)
+'  if (not ERSGIN=* or ERSGIN="?") and (FCSGIN=*) and (FCOCIN=*) then ERSGIN=(FCSGIN-FCOCIN) end if
+'  if (not ERSGUP=* or ERSGUP="?") and (FCSGUP=*) and (FCOCUP=*) then ERSGUP=(FCSGUP-FCOCUP) end if
+
+' USE FCOCIN/UP for TBA considering OC = LRP cross reference
+   if (LTYPE beginswith "PR") and (FCSGIN=*) then FCOCIN=FCSGIN end if
+   if (LTYPE beginswith "PR") and not (FCSGIN=*) then FCOCIN=? end if
+   if (LTYPE beginswith "PR") and (FCSGUP=*) then FCOCUP=FCSGUP end if
+   if (LTYPE beginswith "PR") and not (FCSGUP=*) then FCOCUP=? end if
+' Possibly OC is the PRP so we recalculated FCOC in TBA MODE from the others
+'  if (LTYPE beginswith "PR") and (FCOCUP=*) and (SGOCUP=*) then FCOCUP=(FCOCUP-SGOCUP) end if
+'  if (LTYPE beginswith "PR") and not (FCOCUP=*) and not (SGOCUP=*) then FCOCUP=? end if
+
+' INDIRECT Mode: use the SGOCUP to get the right OCHT. The OCHT now is referred to the cross reference
+'  if (LTYPE beginswith "PR") and (OCHT=*) then OCHT=OCHT-SGOCUP end if
+' BI-TRifocal parameters
+' In case arrive the FCSGIN/UP and SGOCIN/UP but not the FCOCIN/UP
+'  if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and (FCSGIN=*) and (SGOCIN=*) then FCOCIN=(FCSGIN+SGOCIN) end if
+'  if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and (FCSGUP=*) and (SGOCUP=*) then FCOCUP=(FCSGUP+SGOCUP) end if
+
+' In case arrive the FCOCIN/UP referred to SG point but NOT arrive the SGOCIN/UP
+' it must be turned OFF the check power on Bifocal becuase it's not possible to read the distance power
+' N.B. remember to set SCOCIN/UP = 0 in the MEIDB for bifocal lens brand
+'  if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and (FCOCIN=*) and not (SGOCIN=*) then _NOCKBTPWR=1 end if
+'  if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and (FCOCUP=*) and not (SGOCUP=*) then _NOCKBTPWR=1 end if
+
+' In case arrive the FCOCIN/UP referred to SG point and arrive the SGOCIN/UP
+' the FCOC wil. be referred to OC
+'  if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and (FCOCIN=*) and (SGOCIN=*) then FCOCIN=(FCOCIN+SGOCIN) end if
+'  if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and (FCOCUP=*) and (SGOCUP=*) then FCOCUP=(FCOCUP+SGOCUP) end if
+
+' IDIRECT Mode: use the SGOCUP to get the right SEGHT.
+'  if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and (SGOCUP=*) and (OCHT=*) and not (SEGHT=*) then SEGHT=OCHT-SGOCUP end if
+' We use the SGOCIN to get the right IPD.
+'  if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and (SGOCIN=*) and (NPD=*) then IPD=NPD-SGOCIN end if
+
+
+'change the direction of SGOCIN
+'  if (SGOCIN=*) then SGOCIN=-1*SGOCIN end if
+''use SGOC instead of ERSG
+'  if (ERSGIN=*) then SGOCIN=ERSGIN else SGOCIN=? end if
+'  if (ERSGUP=*) then SGOCUP=ERSGUP else SGOCUP=? end if
+'''use ERSG instead of SGOC
+'  if not (ERSGIN=*) and (SGOCIN=*) then ERSGIN=SGOCIN else ERSGIN=? end if
+'  if not (ERSGUP=*) and (SGOCUP=*) then ERSGUP=-SGOCUP else ERSGUP=? end if
+
+'Force PR if SV FF
+   if (LTYPE beginswith "SV") and ((LTYPE contains "FF") or (HASENG=1)) and (LNAM=*) then LTYPE="PR", _SVFF=1 end if
+'ignore LNAM if no search required
+   if not (((LTYPE beginswith "SV") and (LTYPE contains "FF")) or (LTYPE beginswith "PR") or (LTYPE beginswith "BI") or (LTYPE beginswith "TR") or (_COMMLOGO=1)) then LNAM=? end if
+
+' hide GRADIENT if not requested
+   if not (GRADIENT=1) then GRADIENT=? end if
+
+'  if (LTYPE beginswith "SV") and (GRADIENT=1) then LTYPE="PR", LNAM="4DOT", GRADIENT=0, POLAR=0 end if
+'  if (LTYPE beginswith "SV") and (POLAR=1) and (CYL=0) and (PRVM=0) then LTYPE="PR", LNAM="4DOT", POLAR=0 end if
+
+' test to compone Lnam as LMFR + LNAM in case it is required
+'  if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and (LMFR=*) then LNAM=LMFR&"&""LNAM" end if
+
+' Use power lens data when received
+'Sphera
+   if (LTYPE beginswith "SV") and (SPH=*) and (not LDSPH=* or LDSPH="?") then LDSPH=SPH end if
+   if (LTYPE beginswith "PR") and (SPH=*) and (not LDDRSPH=* or LDDRSPH="?") and not (_NV=1) then LDDRSPH=SPH end if
+   if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and (SPH=*) and (not LDDRSPH=* or LDDRSPH="?") then LDDRSPH=SPH end if
+'cylinder
+   if (LTYPE beginswith "SV") and (CYL=*) and (not LDCYL=* or LDCYL="?") then LDCYL=CYL end if
+   if (LTYPE beginswith "PR") and (CYL=*) and (not LDDRCYL=* or LDDRCYL="?") and not (_NV=1) then LDDRCYL=CYL end if
+   if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and (CYL=*) and (not LDDRCYL=* or LDDRCYL="?") then LDDRCYL=CYL end if
+
+   if (LTYPE beginswith "PR") and (ADD=*) and (not LDADD=* or LDADD="?") and not (_NV=1) then LDADD=ADD end if
+   if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and (ADD=*) and (not LDADD=* or LDADD="?") then LDADD=ADD end if
+
+'Prism module & Angle
+   if (LTYPE beginswith "SV") and (PRVM=*) and (not LDPRVM=* or LDPRVM="?") then LDPRVM=PRVM end if
+   if (LTYPE beginswith "PR") and (PRVM=*) and (not LDDRPRVM=* or LDDRPRVM="?") and not (_NV=1) then _LDDRPRVM=PRVM end if
+   if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and (PRVM=*) and (not LDDRPRVM=* or LDDRPRVM="?") then _LDDRPRVM=PRVM end if
+   if (LTYPE beginswith "SV") and (PRVA=*) and (not LDPRVA=* or LDPRVA="?") then LDPRVA=PRVA end if
+   if (LTYPE beginswith "PR") and (PRVA=*) and (not LDDRPRVA=* or LDDRPRVA="?") and not (_NV=1) then _LDDRPRVA=PRVA end if
+   if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and (PRVA=*) and (not LDDRPRVA=* or LDDRPRVA="?") then _LDDRPRVA=PRVA end if
+'Prism thinning Module and angle
+'  if (LTYP beginswith "PR") and (PTPRVM=*) then LDPTPRVM=PTPRVM else LDPTPRVM=? end if
+'  if (LTYP beginswith "PR") and (PTPRVA=*) then LDPTPRVA=PTPRVA else LDPTPRVA=? end if
+
+' in case of low prism module, the job is set as PR and LNAM = 4Dot
+'  if (LTYPE beginswith "SV") and (LDPRVM=*) and not (LDPRVM="?") and (LDPRVM>0) and (LDPRVM<0.20) then LTYPE="PR", LNAM="4DOT" end if
+
+' enable AX data use
+   if (LTYPE beginswith "SV") and (AX=*) and (not LDAX=* or LDAX="?") then LDAX=AX end if
+   if (LTYPE beginswith "PR") and (AX=*) and (not LDDRAX=* or LDDRAX="?") then LDDRAX=AX end if
+   if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and (AX=*) and (not LDDRAX=* or LDDRAX="?") then LDDRAX=AX end if
+
+' enable pw check if pw values received
+'SV PW
+   if (LTYPE beginswith "SV") and (LDSPH=*) and not (LDSPH="?") then CKPWR=1 else CKPWR=0 end if
+   if (LTYPE beginswith "SV" and CKPWR=1) then CKPRSM=1 else CKPRSM=0 end if
+
+'PRogressive
+'DRPWR
+   if (LTYPE beginswith "PR") and (LDDRSPH=*) and not (LDDRSPH="?") and not (_NV=1) then _CKDRPWR=1 end if
+'NRPWR
+   if (LTYPE beginswith "PR") and (LDNRSPH=*) and not (LDNRSPH="?") and (_NV=1) then _CKNRPWR=1 end if
+'  Possibly DR or NR check Power only if ERDR/NR position is received
+'  if (LTYPE beginswith "PR") and (LDDRSPH=*) and not (LDDRSPH="?") and not (_NV=1) and (ERDRIN=*) and not (ERDRIN="?") and (ERDRUP=*) and not (ERDRUP="?") then _CKDRPWR=1 end if
+'NRPWR
+'  if (LTYPE beginswith "PR") and (LDNRSPH=*) and not (LDNRSPH="?") and (ERNRIN=*) and not (ERNRIN="?") and (ERNRUP=*) and not (ERNRUP="?") then _CKNRPWR=1 end if
+
+'ADD not used if Near power checked
+'  if (LTYPE beginswith "PR") then CKADD=0 end if
+'  if (LTYPE beginswith "PR") and (LDADD=*) and not (LDADD="?") and (not _CKNRPWR=1) and not (_SVFF=1) and not (_NV=1) then CKADD=1 end if
+' AX on Progressive
+   if (LTYPE="PR" and LDDRAX>=0 and LDDRAX<=360) and _SVFF=1 then _CKDRAX=1 end if
+'  if (LTYPE beginswith "PR" and LDNRAX>=0 and LDNRAX<=360) then _CKNRAX=1 end if
+'PRSM on Progressive
+'  if (LTYPE beginswith "PR" and _CKDRPWR=1) then _CKDRPRSM=1 else _CKDRPRSM=0 end if
+'  if (LTYPE beginswith "PR" and _CKNRPWR=1) then _CKNRPRSM=1 else _CKNRPRSM=0 end if
+
+'Bi/TriFocal (check power if possible)
+'DRPWR
+   if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and (LDDRSPH=*) and not (LDDRSPH="?") and not (_NOCKBTPWR=1) then _CKDRPWR=1 end if
+' AX on Progressive
+   if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and LDDRAX>=0 and LDDRAX<=360 and not (_NOCKBTPWR=1) then _CKDRAX=1 end if
+'NRPWR
+'  if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and (LDNRSPH=*) and not (LDNRSPH="?") and not (_NOCKBTPWR=1) then _CKNRPWR=1 end if
+'ADD not used if Near power checked
+'  if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and not (_TR=1) and (LDADD=*) and not (LDADD="?") and (not _CKNRPWR=1) and not (_NOCKBTPWR=1) then CKADD=1 end if
+'PRSM on Bi/TriFocal
+'  if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and _CKDRPWR=1 and not (_NOCKBTPWR=1) then _CKDRPRSM=1 else _CKDRPRSM=0 end if
+'  if ((LTYPE beginswith "BI") or (LTYPE beginswith "TR")) and _CKNRPWR=1 and not (_NOCKBTPWR=1) then _CKNRPRSM=1 else _CKNRPRSM=0 end if
+end if
+'*<
+
+' use temporary sph and cyl variables to check thickness
+if (CYL<=0) then _SPH=SPH, _CYL=CYL end if
+if (CYL>0) and (SPH=*) and (not SPH="?") then _SPH=SPH+CYL, _CYL=CYL*-1 end if 'convert positive to negative CYL notation
+
+define #THKPNOTRECEIVED.1 = 1
+' thkp can be not reveiced always or not received just for some jobs : in both cases keep = 1 the above
+if #THKPNOTRECEIVED.1 = 1 then
+' Simulation of THKP from SPH + CYL (theoretically I should use also Diameter of blank, Mattype and front base but as first approx. I can ignore them)
+   if ((not _SPH=* or _SPH=?) and not THKP>0) then THKP=10 end if
+
+'POSITIVE LENSES
+' Low Positive Lenses but High negative CYL  ( CYL <=-1 )
+   if (_SPH>0 and _SPH<4.0) and (_CYL<=-2.5 and _CYL>=-4.5) and (not THKP>0) then THKP=5 end if
+   if (_SPH>0 and _SPH<4.0) and (_CYL<-4.5) and (not THKP>0) then THKP=8 end if
+' Positive Lenses & NO positive _CYL  ( _CYL <=0.5 )
+   if (_SPH>0 and _SPH<2.3) and (_CYL<=0.5) and (not THKP>0) then THKP=3 end if
+   if (_SPH>=2.3 and _SPH<4.0) and (_CYL<=0.5) and (not THKP>0) then THKP=3 end if
+   if (_SPH>=4.0 and _SPH<7.7) and (_CYL<=0.5) and (not THKP>0) then THKP=5 end if
+   if (_SPH>=7.7 and _SPH<11.0) and (_CYL<=0.5) and (not THKP>0) then THKP=8 end if
+   if _SPH>=11 and (_CYL<=0.5) and (not THKP>0) then THKP=15 end if
+
+'------------------
+
+' NEGATIVE LENSES
+' Negative Lenses & NO negative _CYL  (_CYL >=-0.5 )
+   if (_SPH<=0 and _SPH>-1.3) and (_CYL>=-0.5) and (not THKP>0) then THKP=3 end if
+   if (_SPH<=-1.3 and _SPH>-2.8) and (_CYL>=-0.5) and (not THKP>0) then THKP=3 end if
+   if (_SPH<=-2.8 and _SPH>-4.7) and (_CYL>=-0.5) and (not THKP>0) then THKP=5 end if
+   if (_SPH<=-4.7 and _SPH>-8.0) and (_CYL>=-0.5) and (not THKP>0) then THKP=8 end if
+   if _SPH<=-8.0 and (_CYL>=-0.5) and (not THKP>0) then THKP=15 end if
+' Negative Lenses & Low negative _CYL  (_CYL <-0.5 & >= -2.5 ) the same _SPH threshold +0.7 _CYL medium respect before
+   if (_SPH<=0 and _SPH>-0.6) and ((_CYL>=-2.5 and _CYL<-0.5) or (not _CYL=* or _CYL=?)) and (not THKP>0) then THKP=3 end if
+   if (_SPH<=-0.6 and _SPH>-2.1) and ((_CYL>=-2.5 and _CYL<-0.5) or (not _CYL=* or _CYL=?)) and (not THKP>0) then THKP=3 end if
+   if (_SPH<=-2.1 and _SPH>-4.0) and ((_CYL>=-2.5 and _CYL<-0.5) or (not _CYL=* or _CYL=?)) and (not THKP>0) then THKP=5 end if
+   if (_SPH<=-4.0 and _SPH>-7.3) and ((_CYL>=-2.5 and _CYL<-0.5) or (not _CYL=* or _CYL=?)) and (not THKP>0) then THKP=8 end if
+   if _SPH<=-7.3 and ((_CYL>=-2.5 and _CYL<-0.5) or (not _CYL=* or _CYL=?)) and (not THKP>0) then THKP=15 end if
+' Negative Lenses & High negative _CYL  (< -2.5 ) the same _SPH threshold +1.1 ... +2.0 _CYL medium respect before
+   if (_SPH<=0 and _SPH>-0.2) and (_CYL<-2.5) and (not THKP>0) then THKP=5 end if
+   if (_SPH<=-0.2 and _SPH>-1.5) and (_CYL<-2.5) and (not THKP>0) then THKP=8 end if
+   if (_SPH<=-1.5 and _SPH>-3.0) and (_CYL<-2.5) and (not THKP>0) then THKP=8 end if
+   if (_SPH<=-3.0 and _SPH>-6.0) and (_CYL<-2.5) and (not THKP>0) then THKP=15 end if
+   if _SPH<=-6.0 and (_CYL<-2.5) and (not THKP>0) then THKP=16 end if
+' for safety if nothing act above a high value is forced
+   if not THKP>0 then THKP=15 end if
+end if
+
+'first if bethk is not trustable because it is the thickness of the blank before surfacing we will ignore it
+'comment the next line if BETHK is really the Max thickness of the blank that enter in the edger both for surfaced and for finisched stock blank
+'if BETHK>0 then BETHK=0 end if
+
+if BETHK>0 then CTHKP=BETHK end if
+
+'if not CTHKP>0 and _MAXTHKCD>0 then BETHK=_MAXTHKCD end if
+
+define #BETHKNOTRECEIVED.1 = 1 ' CAN BE USED FOR ESTIMATE THE BLANK EDGE THICKNESS FOR NEGATIVE WHERE THKP IS RECEIVED
+' BETHK can be not reveiced always or not received just for some jobs : in both cases keep = 1 the above
+' WE use BETHP label even though it usually is used for blank thicker point before surfacing.
+' the field that should be used are CTHKP (cribbed lens thicker point or _MAXTHKCD if DVI lms
+if #BETHKNOTRECEIVED.1 = 1 then
+
+' Low Positive Lenses & High negative _CYL  ( _CYL <=-2.5 )
+   if (_SPH>0 and _SPH<2.3) and (_CYL<=-2.5 and _CYL>=-4.5) and (not BETHK>0) then BETHK=5 end if
+   if (_SPH>0 and _SPH<2.3) and (_CYL<-4.5) and (not BETHK>0) then BETHK=6 end if
+' NEGATIVE LENSES
+' Negative Lenses & NO negative _CYL  (_CYL >=-0.5 )
+   if (_SPH<=0 and _SPH>-1.3) and (_CYL>=-0.5) and (not BETHK>0) then BETHK=3 end if
+   if (_SPH<=-1.3 and _SPH>-2.8) and (_CYL>=-0.5) and (not BETHK>0) then BETHK=5 end if
+   if (_SPH<=-2.8 and _SPH>-4.7) and (_CYL>=-0.5) and (not BETHK>0) then BETHK=8 end if
+   if (_SPH<=-4.7 and _SPH>-8.0) and (_CYL>=-0.5) and (not BETHK>0) then BETHK=10 end if
+   if _SPH<=-8.0 and (_CYL>=-0.5) and (not BETHK>0) then BETHK=16 end if
+' Negative Lenses & Low negative _CYL  (_CYL <-0.5 & >= -1.3 ) the same _SPH threshold +0.7 _CYL medium respect before
+   if (_SPH<=0 and _SPH>-0.6) and ((_CYL>=-1.3 and _CYL<-0.5) or (not _CYL=* or _CYL=?)) and (not BETHK>0) then BETHK=3 end if
+   if (_SPH<=-0.6 and _SPH>-2.1) and ((_CYL>=-1.3 and _CYL<-0.5) or (not _CYL=* or _CYL=?)) and (not BETHK>0) then BETHK=5 end if
+   if (_SPH<=-2.1 and _SPH>-4.0) and ((_CYL>=-1.3 and _CYL<-0.5) or (not _CYL=* or _CYL=?)) and (not BETHK>0) then BETHK=8 end if
+   if (_SPH<=-4.0 and _SPH>-7.3) and ((_CYL>=-1.3 and _CYL<-0.5) or (not _CYL=* or _CYL=?)) and (not BETHK>0) then BETHK=15 end if
+   if _SPH<=-7.3 and ((_CYL>=-1.3 and _CYL<-0.5) or (not _CYL=* or _CYL=?)) and (not BETHK>0) then BETHK=16 end if
+' Negative Lenses & High negative _CYL  (< -1.3 ) the same _SPH threshold +1.1 ... +2.0 _CYL medium respect before
+   if (_SPH<=0 and _SPH>-0.2) and (_CYL<-1.3) and (not BETHK>0) then BETHK=3 end if
+   if (_SPH<=-0.2 and _SPH>-1.5) and (_CYL<-1.3) and (not BETHK>0) then BETHK=5 end if
+   if (_SPH<=-1.5 and _SPH>-3.0) and (_CYL<-1.3) and (not BETHK>0) then BETHK=7 end if
+   if (_SPH<=-3.0 and _SPH>-6.0) and (_CYL<-1.3) and (not BETHK>0) then BETHK=15 end if
+   if _SPH<=-6.0 and (_CYL<-1.3) and (not BETHK>0) then BETHK=16 end if
+' for positive lenses BETHK forced to a small value
+   if _SPH>=0 and (not BETHK>0) then BETHK=2 end if
+' for safety if nothing act above a high value is forced
+   if not BETHK>0 then BETHK=15 end if
+
+end if
+
+define #SLOWDOWNXPRISM.1 = 1 ' CAN BE USED TO SLOW DOWN PRISMATIC LENSES. iF nO tba IT REQUIRES TO ASK PRVM AND LTYP/LTYPE + TO ENABLE SOME OF THE ABOVE TBA LINES...
+if #SLOWDOWNXPRISM.1 = 1 then
+' if Prismatic lens this increases the declared THKP in order to slow down the roughing cut
+   if (LTYPE beginswith "SV" or (LTYPE beginswith "PR" and LNAM="4Dots")) and (LDPRVM>0.5) then THKP=THKP+2.5+(THKP*LDPRVM*0.15) end if
+'aN even better solution, if we can change the Oma2Mei.mdb material table, is to create two new materials where speed reduction
+'are bigger than usual for Prismatic lenses CR; HIndex and 1.74 becomes material 10 = CR;HI;1.74 with Prism
+'  if (LTYPE beginswith "SV" or (LTYPE beginswith "PR" and LNAM="4Dots")) and (LDPRVM>0.5) and (LMATTYPE=1 or LMATTYPE=5 or LMATTYPE=7) then LMATTYPE=10 end if
+' Poly and trivex becomes material 11 = Poly; Trivex with Prism
+'  if (LTYPE beginswith "SV" or (LTYPE beginswith "PR" and LNAM="4Dots")) and (LDPRVM>0.5) and (LMATTYPE=2 or LMATTYPE=6) then LMATTYPE=11 end if
+end if
+delete _NOCKBTPWR       'Delete temporary variables
+delete _NV
+delete _SVFF
+delete _CYL
+delete _SPH
+
+' HI-INDEX if Index > 1.65 force Hi-Index1.74
+'if (LMATTYPE=5) and (LIND>1.65) then LMATTYPE=7 end if
+'if (LMATTYPE=5) and not (LIND>0) then LMATTYPE=7 end if
+
+'----------------------------- ALIASOMA CUSTOM -----------------------
+' space where some Alias OMA customized for each application must be inserted
+'---------------------------------------------------------------------
+
+'SAVETY FORCE TO 0.5MM
+if PINB=0.3 then PINB=0.4 end if
+if ETYP=-1 then ETYP=1 end if
+'*<
+'
+'Disable safety for a Streight Bevel if edge thicknes is greater then 9
+if ETYP=1 and THKP>=9 then PINB=?;? end if
+'Disable safety for a Incline Bevel if edge thicknes is greater then 9
+if ETYP=34 or HICRV=1 and THKP>=9 then PINB=?;? end if
+'
+'----------------------------- SETTING FROM JOBSETUP -----------------
+' JobSetup parameter translated in IF instruction 
+' During conversion from Legoma.cfg insert the old IF before these instruction
+'---------------------------------------------------------------------
+if ETYP = 33 then ETYP = 5 end if   'Convert old ETYP definition of Edge = Tbevel in the new OMA standard
+if ETYP = 51 then ETYP = 2, HICRV = 1 end if   'Convert old ETYP definition of Edge = Rimless Inclined in the new OMA standard
+if not BEVC>0 then BEVC = FCRV end if     'if BEVC is not valit we use FCRV
+
+
+'''#STARTOMADEFAULT
+'GDEPTH = 0.5
+'GWIDTH = 0.5
+'if not PINB >= 0 then PINB = 0.3 end if
+'if not _PINONOF >= 0 then _PINONOF = 1 end if
+'_FPINB = 0.2
+'_FPINONF = 1
+'if not BEVP >= 0 then BEVP = 7 end if
+'BEVM = 0.8
+'if not _ETYP2 >= 0 then _ETYP2 = 0 end if
+'FRNT = 5
+'_LCOAT = 1
+'FCRV = 6.000000
+'if not THKP >= 0 then THKP = 2.8 end if
+'''#ENDOMADEFAULT
+
+define #AUTOBEVP=?
+define #AUTOBEVM=?
+if ETYP = 1 then                    'Edge = Bevel
+   if HICRV = 1 then                'Inclined
+      #AUTOBEVP = 2, #AUTOBEVM = 33
+   else                             'Vertical
+      #AUTOBEVP = 1, #AUTOBEVM = 1
+   end if
+elseif ETYP = 2 then                'Edge = Rimless
+   #AUTOBEVP = 4, #AUTOBEVM=?
+elseif ETYP = 3 then                'Edge = Groove
+   #AUTOBEVP = 2, #AUTOBEVM = 33
+elseif ETYP = 5 then                'Edge = Tbevel
+   #AUTOBEVP = 1, #AUTOBEVM = 1
+elseif ETYP = 34 then               'Edge = StepBack
+   #AUTOBEVP = 1, #AUTOBEVM = 1
+else
+   #AUTOBEVP=?, #AUTOBEVM=?
+end if
+if BEVP = 7 then                       'If Bevel = 'Automatic'
+
+   if ETYP = 1 then                    'Edge = Bevel
+      if HICRV = 1 then                'Inclined
+         BEVP = 2, BEVM = 33
+      else                             'Vertical
+      BEVP = 2, BEVM = 33
+      end if
+   elseif ETYP = 2 then                'Edge = Rimless
+      BEVP = 4, BEVM=?
+   elseif ETYP = 3 then                'Edge = Groove
+      BEVP = 2, BEVM = 33
+   elseif ETYP = 5 then                'Edge = Tbevel
+   BEVP = 2, BEVM = 33
+   elseif ETYP = 34 then               'Edge = StepBack
+   BEVP = 2, BEVM = 33
+   else
+      BEVP=?, BEVM=?
+   end if
+end if
+
+if BEVP = 7 then   'If Bevel = 'Automatic'
+   BEVP = #AUTOBEVP
+   BEVM = #AUTOBEVM
+elseif BEVP=1 then   'Replication of JobSetup built in BEVM adjust
+   if not BEVM >= 0 then
+      BEVM = 0
+   elseif BEVM > 7 then
+      if BEVP = #AUTOBEVP then BEVM = #AUTOBEVM else BEVM = 0.8 end if
+   end if
+elseif BEVP=2 then   'Replication of JobSetup built in BEVM adjust
+   if not (BEVM >= 10 and BEVM <= 90) then
+      if BEVP = #AUTOBEVP then BEVM = #AUTOBEVM else BEVM = 33 end if
+   end if
+end if
+
+'JobSetup did not manage CSIZ
+delete CSIZ
+
+'if BEVC is not valit we use FCRV
+if not BEVC>0 then BEVC = FCRV end if
+
+'LTYP = SV, FF force to be LTYP=PR
+if LTYP beginswith SV and LTYP contains FF then LTYP=PR end if
+
+'----------------------------- ADDITIONAL SETTINGS -----------------
+' The following lines are not from JobSetup but may be useful for EyeGOAL 
+'---------------------------------------------------------------------
+
+'if not _VARINCSTEP >= 0 then _VARINCSTEP=15 end if 
+'if CYL=0 or CYL=? then AX="", CYL="" end if
+'if LDCYL=0 or LDCYL=? then LDAX="", LDCYL="" end if
+
+if LTYPE = "PR FF" then LTYPE = "PR", LTYP = "PR" end if 
