@@ -364,7 +364,7 @@ delete _NOCKBTPWR       'Delete temporary variables
 delete _NV
 delete _SVFF
 delete _CYL
-
+delete _SPH
 
 ' HI-INDEX if Index > 1.65 force Hi-Index1.74
 'if (LMATTYPE=5) and (LIND>1.65) then LMATTYPE=7 end if
