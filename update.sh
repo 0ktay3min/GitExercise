@@ -4,11 +4,6 @@ RED="\033[1;31m"
 GREEN="\033[1;32m"
 NOCOLOR="\033[0m"
 
-if (( $EUID != 0 )); then
-    sudo /home/jb/bash/update.sh
-    exit
-fi
-
 
 echo
 
